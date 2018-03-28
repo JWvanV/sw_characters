@@ -1,5 +1,21 @@
 <resources>
     <string name="app_name">SW Characters</string>
-    <string name="action_settings">Settings</string>
+
     <string name="search">Search</string>
+    <string name="sort">Sort</string>
+    <string name="personsSortName">Name</string>
+    <string name="personsSortBirthyear">Birth year</string>
+
+    <string name="personsError">Unable to load persons.\n\nPlease check your connection \nand tap anywhere to try again.</string>
+    <string name="personsEmpty">There are no persons to show</string>
+    <string name="title_activity_person">PersonActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="personNameLabel">Name</string>
+    <string name="personBirthYearLabel">Birth year</string>
+    <string name="personHomeWorldLabel">Home world</string>
+    <string name="personVehiclesLabel">Vehicles</string>
+    <string name="personFilmsLabel">Films</string>
+    <string name="personHomeWorldNameLabel">Name</string>
+    <string name="personDetailsLabel">Details</string>
+    <string name="unknown">Unknown</string>
 </resources>

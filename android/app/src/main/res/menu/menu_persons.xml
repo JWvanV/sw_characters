@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mijjnapps.swcharacters.ui.persons.PersonsActivity">
+
+    <group android:id="@+id/actionPersonsGroup">
+
+        <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search"
+            app:actionViewClass="android.support.v7.widget.SearchView"
+            app:showAsAction="ifRoom|collapseActionView" />
+
+        <item
+            android:id="@+id/action_sort"
+            android:icon="@drawable/ic_sort"
+            android:title="@string/sort"
+            android:visible="true"
+            app:showAsAction="ifRoom|collapseActionView">
+            <menu>
+                <item
+                    android:id="@+id/action_sort_name"
+                    android:title="@string/personsSortName" />
+                <item
+                    android:id="@+id/action_sort_birthyear"
+                    android:title="@string/personsSortBirthyear" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

@@ -37,9 +37,16 @@ dependencies {
     //SWAPI
     implementation 'com.github.swapi4j:swapi4j-client:1.1.0'
 
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$architecture_version"
+    // alternatively, just ViewModel
+    implementation "android.arch.lifecycle:viewmodel:$architecture_version"
+    // alternatively, just LiveData
+    implementation "android.arch.lifecycle:livedata:$architecture_version"
+
     // Room
-    implementation "android.arch.persistence.room:runtime:1.0.0"
-    kapt "android.arch.persistence.room:compiler:1.0.0"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
 
     //testing
     testImplementation 'junit:junit:4.12'
