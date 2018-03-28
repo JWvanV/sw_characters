@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.os.AsyncTask
 import android.util.Log
 import com.github.swapi4j.SwapiClient
 import com.mijjnapps.swcharacters.tasks.*
@@ -91,12 +92,15 @@ class SwPersonViewModel : ViewModel() {
         planet?.value = newPlanet
 
         if (newPlanet != null)
-            SavePlanetInDbTask(db, newPlanet).execute()
+            SavePlanetInDbTask(db, newPlanet).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     private fun setNewVehicleData(resMap: HashMap<Long, SwVehicle>) {
         if (vehicles == null)
             vehicles = MutableLiveData()
+
+
+        Log.d(TAG, "setNewVehicleData $resMap")
 
         vehicles?.value = resMap.values.toList()
     }
@@ -104,6 +108,8 @@ class SwPersonViewModel : ViewModel() {
     private fun setNewFilmData(resMap: HashMap<Long, SwFilm>) {
         if (vehicles == null)
             vehicles = MutableLiveData()
+
+        Log.d(TAG, "setNewFilmData $resMap")
 
         films?.value = resMap.values.toList()
     }
@@ -120,7 +126,7 @@ class SwPersonViewModel : ViewModel() {
                 Log.d(TAG, "Results from DB: $result")
                 person?.value = result
             }
-        }).execute()
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     private fun loadPlanet(id: Long) {
@@ -131,10 +137,11 @@ class SwPersonViewModel : ViewModel() {
                 else
                     setNewPlanetData(result)
             }
-        }).execute()
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     private fun loadVehicles(ids: List<Long>) {
+        Log.d(TAG, "loadVehicles $ids")
         val total = ids.size
         var failedCount = 0
         val resMap = HashMap<Long, SwVehicle>()
@@ -142,11 +149,12 @@ class SwPersonViewModel : ViewModel() {
         ids.forEach { vId ->
             LoadVehicleFromDbTask(db, vId, object : DbResponseListener<SwVehicle?> {
                 override fun onSuccess(result: SwVehicle?) {
+                    Log.d(TAG, "loadVehicles onSuccess $result")
                     if (result == null) {
                         LoadVehicleFromApiTask(client, vId, object : ApiResponseListener<SwVehicle> {
                             override fun onSuccess(result: SwVehicle) {
                                 resMap[vId] = result
-                                SaveVehicleInDbTask(db, result).execute()
+                                SaveVehicleInDbTask(db, result).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 
                                 if (resMap.size == total + failedCount)
                                     setNewVehicleData(resMap)
@@ -154,8 +162,10 @@ class SwPersonViewModel : ViewModel() {
 
                             override fun onFail() {
                                 failedCount++
+                                if (resMap.size == total + failedCount)
+                                    setNewVehicleData(resMap)
                             }
-                        }).execute()
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     } else {
                         resMap[vId] = result
 
@@ -163,11 +173,12 @@ class SwPersonViewModel : ViewModel() {
                             setNewVehicleData(resMap)
                     }
                 }
-            }).execute()
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
     }
 
     private fun loadFilms(ids: List<Long>) {
+        Log.d(TAG, "loadFilms $ids")
         val total = ids.size
         var failedCount = 0
         val resMap = HashMap<Long, SwFilm>()
@@ -175,11 +186,12 @@ class SwPersonViewModel : ViewModel() {
         ids.forEach { fId ->
             LoadFilmFromDbTask(db, fId, object : DbResponseListener<SwFilm?> {
                 override fun onSuccess(result: SwFilm?) {
+                    Log.d(TAG, "loadFilms onSuccess $result")
                     if (result == null) {
                         LoadFilmFromApiTask(client, fId, object : ApiResponseListener<SwFilm> {
                             override fun onSuccess(result: SwFilm) {
                                 resMap[fId] = result
-                                SaveFilmInDbTask(db, result).execute()
+                                SaveFilmInDbTask(db, result).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 
                                 if (resMap.size == total + failedCount)
                                     setNewFilmData(resMap)
@@ -187,8 +199,10 @@ class SwPersonViewModel : ViewModel() {
 
                             override fun onFail() {
                                 failedCount++
+                                if (resMap.size == total + failedCount)
+                                    setNewFilmData(resMap)
                             }
-                        }).execute()
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     } else {
                         resMap[fId] = result
 
@@ -196,7 +210,7 @@ class SwPersonViewModel : ViewModel() {
                             setNewFilmData(resMap)
                     }
                 }
-            }).execute()
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
     }
 
@@ -213,6 +227,6 @@ class SwPersonViewModel : ViewModel() {
             override fun onFail() {
                 setNewPlanetData(null)
             }
-        }).execute()
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 }

@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.os.AsyncTask
 import com.github.swapi4j.SwapiClient
 import com.mijjnapps.swcharacters.tasks.*
 
@@ -40,7 +41,7 @@ class SwPersonsViewModel : ViewModel() {
 
         persons?.value = PersonsData(newPersons)
 
-        SavePersonsInDbTask(db, newPersons).execute()
+        SavePersonsInDbTask(db, newPersons).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     private fun loadPersonsFromDb(runOnComplete: Runnable) {
@@ -53,7 +54,7 @@ class SwPersonsViewModel : ViewModel() {
                     runOnComplete.run()
                 }
             })
-            personsLoadingDbTask?.execute()
+            personsLoadingDbTask?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
     }
 
@@ -70,7 +71,7 @@ class SwPersonsViewModel : ViewModel() {
                     runOnFail.run()
                 }
             })
-            personRefreshingTask?.execute()
+            personRefreshingTask?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
     }
 
